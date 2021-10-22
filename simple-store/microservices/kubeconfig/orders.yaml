@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: orders
+spec:
+  selector:
+    matchLabels:
+      app: orders
+      tier: backend-2
+      track: stable
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: orders
+        tier: backend-2
+        track: stable
+    spec:
+      containers:
+      - name: orders
+        image: myadlapalli/image2
+          env: 
+          - name: PRODUCT_URL
+            value: http://localhost:8082
+        ports:
+        - containerPort: 8081
+apiVersion: v1
+kind: Service
+metadata:
+  name: orders
+spec:
+  selector:
+    app: orders
+    tier: backend-1
+  type: NodePort
+  ports:
+  - protocol: TCP
+    port: 8081
+    targetPort: 8081
